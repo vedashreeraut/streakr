@@ -10,7 +10,7 @@ function loadTasks() {
         const li = document.createElement("li");
         li.innerHTML = `
           <span>${task.title}</span>
-          <button class="delete-btn" onclick="deleteTask(${task.id})">
+          <button class="delete-btn" onclick="deleteTask('${task._id}')">
             <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
             Delete
           </button>
