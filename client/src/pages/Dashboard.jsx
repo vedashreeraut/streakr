@@ -1,9 +1,32 @@
+import { useEffect, useState } from "react";
+
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import StatCard from "../components/StatCard";
 import TaskCard from "../components/TaskCard";
 
+import { getTasks } from "../services/api";
+import AddTaskModal from "../components/AddTaskModal";
+
 function Dashboard() {
+  const [tasks, setTasks] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  useEffect(() => {
+  async function loadTasks() {
+    try {
+      const data = await getTasks();
+
+      console.log("FROM API", data);
+
+      setTasks(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  loadTasks();
+}, []);
+  console.log("STATE", tasks);
   return (
     <div className="flex bg-slate-100 min-h-screen">
       <Sidebar />
@@ -21,32 +44,46 @@ function Dashboard() {
 
         {/* Today's Tasks */}
         <section className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">
-            Today's Tasks
-          </h2>
+
+  <div className="flex justify-between items-center mb-6">
+
+    <h2 className="text-2xl font-bold">
+      Today's Tasks
+    </h2>
+
+   <button
+  onClick={() => setShowModal(true)}
+  className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-5 py-2 rounded-xl transition"
+>
+  + New Task
+</button>
+
+  </div>
 
           <div className="space-y-4">
-            <TaskCard
-              title="Finish React Dashboard"
-              priority="High"
-              dueDate="Today"
-            />
-
-            <TaskCard
-              title="Workout"
-              priority="Medium"
-              dueDate="Today"
-            />
-
-            <TaskCard
-              title="Read 20 Pages"
-              priority="Low"
-              dueDate="Tomorrow"
-              completed={true}
-            />
+            {tasks.map((task) => (
+              <TaskCard
+                key={task._id}
+                title={task.title}
+                priority={task.priority}
+                dueDate={
+                task.dueDate
+                ? new Date(task.dueDate).toLocaleDateString()
+               : "No due date"
+         }
+        completed={task.completed}
+  />
+))}
           </div>
         </section>
       </main>
+      <AddTaskModal
+  isOpen={showModal}
+  onClose={() => setShowModal(false)}
+  onTaskCreated={(task) =>
+    setTasks((prev) => [task, ...prev])
+  }
+/>
     </div>
   );
 }
