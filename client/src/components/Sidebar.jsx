@@ -1,10 +1,33 @@
+import { NavLink } from "react-router-dom";
 const menuItems = [
-  "Dashboard",
-  "Tasks",
-  "Friends",
-  "Leaderboard",
-  "Analytics",
-  "Settings",
+  {
+    name: "Dashboard",
+    path: "/dashboard",
+  },
+  {
+    name: "Tasks",
+    path: "/tasks",
+  },
+  {
+    name: "Friends",
+    path: "/friends",
+  },
+  {
+    name: "Leaderboard",
+    path: "/leaderboard",
+  },
+  {
+    name: "Analytics",
+    path: "/analytics",
+  },
+  {
+    name: "Settings",
+    path: "/settings",
+  },
+  {
+  name: "Achievements",
+  path: "/achievements",
+},
 ];
 
 function Sidebar() {
@@ -16,12 +39,18 @@ function Sidebar() {
 
       <nav className="space-y-2">
         {menuItems.map((item) => (
-          <button
-            key={item}
-            className="w-full text-left px-4 py-3 rounded-xl hover:bg-orange-100 transition"
+          <NavLink
+            key={item.name}
+            to={item.path}
+            className={({ isActive }) =>
+              `block w-full text-left px-4 py-3 rounded-xl transition ${isActive
+                ? "bg-orange-500 text-white"
+                : "hover:bg-orange-100"
+              }`
+            }
           >
-            {item}
-          </button>
+            {item.name}
+          </NavLink>
         ))}
       </nav>
     </aside>
