@@ -1,4 +1,6 @@
-const API = "http://127.0.0.1:3001/tasks";
+const BASE_URL = import.meta.env.VITE_API_URL;
+const API = `${BASE_URL}/tasks`;
+const FRIEND_API = `${BASE_URL}/api/friends`;
 
 function authHeaders() {
   const token = localStorage.getItem("token");
@@ -57,7 +59,7 @@ export async function toggleTask(id) {
 }
 export async function login(email, password) {
   const response = await fetch(
-    "http://127.0.0.1:3001/auth/login",
+    `${BASE_URL}/auth/login`,
     {
       method: "POST",
       headers: {
@@ -80,7 +82,7 @@ export async function login(email, password) {
 }
 export async function register(name, email, password) {
   const response = await fetch(
-    "http://127.0.0.1:3001/auth/register",
+    `${BASE_URL}/auth/register`,
     {
       method: "POST",
       headers: {
@@ -130,7 +132,6 @@ export async function togglePin(id) {
 
   return response.json();
 }
-const FRIEND_API = "http://127.0.0.1:3001/api/friends";
 
 export async function getPendingRequests() {
   const response = await fetch(
@@ -226,7 +227,7 @@ export async function getFriends() {
 }
 export async function getMyProfile() {
   const response = await fetch(
-    "http://127.0.0.1:3001/auth/me",
+    `${BASE_URL}/auth/me`,
     {
       headers: authHeaders(),
     }
@@ -237,7 +238,7 @@ export async function getMyProfile() {
 
 export async function getUserProfile(id) {
   const response = await fetch(
-    `http://127.0.0.1:3001/api/friends/profile/${id}`,
+    `${BASE_URL}/api/friends/profile/${id}`,
     {
       headers: authHeaders(),
     }
