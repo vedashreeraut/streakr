@@ -211,7 +211,7 @@ GitHub:
 https://github.com/vedashreeraut
 
 LinkedIn:
-(Add your LinkedIn profile here)
+(https://www.linkedin.com/in/vedashreeraut/)
 
 ---
 
