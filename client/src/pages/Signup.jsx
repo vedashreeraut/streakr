@@ -15,7 +15,8 @@ function Signup() {
     try {
       await register(name, email, password);
 
-      navigate("/login");
+      localStorage.removeItem("token");
+      navigate("/auth", { replace: true });
 
     } catch (err) {
       alert(err.message);
@@ -97,7 +98,7 @@ function Signup() {
         <p className="text-center text-sm text-gray-500 mt-8">
           Already have an account?{" "}
           <Link
-            to="/login"
+            to="/auth"
             className="text-orange-500 font-semibold hover:underline"
           >
             Log In

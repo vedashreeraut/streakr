@@ -1,3 +1,5 @@
+import { Search } from "lucide-react";
+
 function TaskFilters({
   search,
   setSearch,
@@ -7,20 +9,33 @@ function TaskFilters({
   setStatusFilter,
 }) {
   return (
-    <div className="flex gap-4 mb-8">
+    <div className="flex flex-wrap gap-4 items-center">
 
-      <input
-        type="text"
-        placeholder="Search tasks..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="flex-1 border rounded-xl px-4 py-2 bg-white"
-      />
+      <div className="flex flex-1 items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow">
+
+        <Search
+          size={18}
+          className="text-slate-400"
+        />
+
+        <input
+          type="text"
+          placeholder="Search tasks..."
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+          className="flex-1 outline-none"
+        />
+
+      </div>
 
       <select
         value={priorityFilter}
-        onChange={(e) => setPriorityFilter(e.target.value)}
-        className="border rounded-xl px-4 py-2 bg-white"
+        onChange={(e) =>
+          setPriorityFilter(e.target.value)
+        }
+        className="rounded-2xl bg-white px-5 py-3 shadow"
       >
         <option>All</option>
         <option>High</option>
@@ -30,8 +45,10 @@ function TaskFilters({
 
       <select
         value={statusFilter}
-        onChange={(e) => setStatusFilter(e.target.value)}
-        className="border rounded-xl px-4 py-2 bg-white"
+        onChange={(e) =>
+          setStatusFilter(e.target.value)
+        }
+        className="rounded-2xl bg-white px-5 py-3 shadow"
       >
         <option>All</option>
         <option>Completed</option>

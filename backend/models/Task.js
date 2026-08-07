@@ -31,6 +31,11 @@ const taskSchema = new mongoose.Schema(
         dueDate: {
             type: Date,
         },
+        repeat: {
+            type: String,
+            enum: ["Never", "Daily", "Weekly", "Monthly"],
+            default: "Never",
+        },
 
         isPrivate: {
             type: Boolean,

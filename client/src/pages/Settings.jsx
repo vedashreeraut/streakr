@@ -1,26 +1,22 @@
 import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
+import { useTheme } from "../context/ThemeContext";
 
 function Settings() {
   const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
+const { darkMode, setDarkMode } = useTheme();
   const [dailyReminder, setDailyReminder] = useState(true);
 
   useEffect(() => {
     const savedNotifications =
       localStorage.getItem("notifications");
 
-    const savedDarkMode =
-      localStorage.getItem("darkMode");
-
+    
     const savedReminder =
       localStorage.getItem("dailyReminder");
 
     if (savedNotifications !== null)
       setNotifications(savedNotifications === "true");
-
-    if (savedDarkMode !== null)
-      setDarkMode(savedDarkMode === "true");
 
     if (savedReminder !== null)
       setDailyReminder(savedReminder === "true");
@@ -30,11 +26,6 @@ function Settings() {
     localStorage.setItem(
       "notifications",
       notifications
-    );
-
-    localStorage.setItem(
-      "darkMode",
-      darkMode
     );
 
     localStorage.setItem(
@@ -80,7 +71,7 @@ function Settings() {
 
         <SettingCard
           title="Dark Mode"
-          description="Coming soon"
+          description="Switch between light and dark mode"
           checked={darkMode}
           onChange={() =>
             setDarkMode(!darkMode)

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login, register } from "../services/api";
+import loginBg from "../assets/login-bg.png";
 
 function Auth() {
     const [isLogin, setIsLogin] = useState(true);
@@ -42,45 +43,63 @@ function Auth() {
         }
     }
     return (
-        <div className="min-h-screen bg-slate-100 flex items-center justify-center p-8">
-
-            <div className="bg-white rounded-3xl shadow-xl overflow-hidden w-full max-w-5xl grid grid-cols-2">
-
+        <div className="min-h-screen bg-[radial-gradient(circle_at_top,#fff7ed,white_60%)] flex items-center justify-center p-10">
+            <div className="bg-white rounded-[36px] shadow-2xl overflow-hidden w-full max-w-5xl grid grid-cols-2">
                 {/* LEFT */}
 
-                <div className="bg-orange-500 text-white p-12 flex flex-col justify-between">
+                <div
+                    className="relative overflow-hidden text-white p-12 flex flex-col justify-between bg-cover bg-right"
+                    style={{
+                        backgroundImage: `url(${loginBg})`,
+                    }}
+                >
+                    {/* Dark overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50"></div>
 
-                    <div>
-                        <h1 className="text-4xl font-bold">
+                    <div className="relative z-10">
+                        <h1 className="text-[2.6rem] font-extrabold flex items-center gap-3">
                             🔥 STREAKR
                         </h1>
 
-                        <p className="mt-5 text-base opacity-90">
+                        <p className="mt-8 text-2rem] font-semibold leading-relaxed">
                             Build habits.
                             <br />
-                            One streak at a time.
+                            Protect your streak.
+                            <br />
+                            Level up.
                         </p>
                     </div>
 
-                    <div className="space-y-5">
+                    <div className="relative z-10 space-y-4 text-2.3rem]">
 
-                        <div>✔ Complete daily goals</div>
+                        <div className="flex items-center gap-3">
+                            <span>✔</span>
+                            <span>Complete daily goals</span>
+                        </div>
 
-                        <div>🔥 Maintain streaks</div>
+                        <div className="flex items-center gap-3">
+                            <span>🔥</span>
+                            <span>Maintain streaks</span>
+                        </div>
 
-                        <div>🏆 Earn XP & Level Up</div>
+                        <div className="flex items-center gap-3">
+                            <span>🏆</span>
+                            <span>Earn XP & Level Up</span>
+                        </div>
 
-                        <div>👥 Compete with friends</div>
+                        <div className="flex items-center gap-3">
+                            <span>👥</span>
+                            <span>Compete with friends</span>
+                        </div>
 
                     </div>
-
                 </div>
 
                 {/* RIGHT */}
 
-                <div className="p-10 flex flex-col justify-center min-h-[520px]">
+                <div className="p-10 flex flex-col justify-center min-h-[550px]">
 
-                    <h2 className="text-4xl font-bold mb-3">
+                    <h2 className="text-3xl font-bold mb-3">
 
                         {isLogin ? "Welcome Back" : "Create Account"}
 
@@ -104,8 +123,7 @@ function Auth() {
                                 placeholder="Name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full border rounded-xl px-4 py-2.75"
-                            />
+                                className="w-full rounded-2xl border border-slate-300 bg-white px-5 py-4 outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-100 transition" />
                         )}
 
                         <input
@@ -113,19 +131,17 @@ function Auth() {
                             placeholder="Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full border rounded-xl px-3.5 py-2.5"
-                        />
+                            className="w-full rounded-2xl border border-slate-300 bg-white px-5 py-4 outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-100 transition" />
 
                         <input
                             type="password"
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full border rounded-xl px-3.5 py-2.5"
-                        />
+                            className="w-full rounded-2xl border border-slate-300 bg-white px-5 py-4 outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-100 transition" />
 
                         <button
-                            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl font-semibold transition"
+                            className="w-full bg-gradient-to-r from-orange-500 to-amber-400 hover:scale-[1.02] transition text-white py-2.5 rounded-xl font-semibold transition"
                         >
                             {isLogin ? "Log In" : "Create Account"}
                         </button>

@@ -68,29 +68,70 @@ function Analytics() {
         calculateLongestStreak(tasks);
     return (
         <Layout>
-            <h1 className="text-4xl font-bold mb-2">
-                Analytics
-            </h1>
 
-            <p className="text-gray-500 mb-10">
-                Track your productivity and progress.
-            </p>
+            <div className="mb-10">
 
-            <OverviewCards
-                totalTasks={totalTasks}
-                completionRate={completionRate}
-                xp={xp}
-                longestStreak={longestStreak}
-            />
+                <p className="uppercase tracking-[0.25em] text-orange-500 font-semibold">
+                    INSIGHTS
+                </p>
 
-            <WeeklyChart tasks={tasks} />
+                <h1 className="text-5xl font-black mt-2">
+                    Analytics
+                </h1>
 
-            <div className="grid grid-cols-2 gap-8 mt-8">
-                <PriorityChart tasks={tasks} />
-                <Insights tasks={tasks} />
+                <p className="text-slate-500 mt-3">
+                    Your productivity at a glance.
+                </p>
+
             </div>
+
+            <div className="rounded-[30px] bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl p-8 mb-8">
+
+                <OverviewCards
+                    totalTasks={totalTasks}
+                    completionRate={completionRate}
+                    xp={xp}
+                    longestStreak={longestStreak}
+                />
+
+            </div>
+
+
+            <div className="grid lg:grid-cols-2 gap-8">
+
+                <div className="rounded-[30px] bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl p-8">
+
+                    <h2 className="text-2xl font-bold mb-6">
+                        Task Priorities
+                    </h2>
+
+                    <PriorityChart tasks={tasks} />
+
+                </div>
+
+                <div className="rounded-[30px] bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl p-8">
+
+                    <h2 className="text-2xl font-bold mb-6 mt-8">
+                        Productivity Insights
+                    </h2>
+
+                    <Insights tasks={tasks} />
+
+                </div>
+
+            </div>
+
+            <div className="rounded-[30px] bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl p-8 mt-8">
+
+                <h2 className="text-2xl font-bold mb-6">
+                    Weekly Activity
+                </h2>
+
+                <WeeklyChart tasks={tasks} />
+
+            </div>
+
         </Layout>
     );
 }
-
 export default Analytics;

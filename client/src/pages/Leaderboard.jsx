@@ -1,91 +1,95 @@
+import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-
-const users = [
-  {
-    rank: 1,
-    name: "Vedashree",
-    xp: 520,
-    streak: 14,
-    tasks: 52,
-    you: true,
-  },
-  {
-    rank: 2,
-    name: "Alex",
-    xp: 470,
-    streak: 12,
-    tasks: 49,
-  },
-  {
-    rank: 3,
-    name: "Sarah",
-    xp: 430,
-    streak: 10,
-    tasks: 45,
-  },
-  {
-    rank: 4,
-    name: "John",
-    xp: 390,
-    streak: 9,
-    tasks: 41,
-  },
-];
+import { Trophy, Medal, Award } from "lucide-react";
+import { getLeaderboard } from "../services/api";
 
 function Leaderboard() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    async function loadLeaderboard() {
+      try {
+        const data = await getLeaderboard();
+        setUsers(data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadLeaderboard();
+  }, []);
+
+  function getIcon(index) {
+    if (index === 0)
+      return <Trophy className="text-yellow-500" size={26} />;
+
+    if (index === 1)
+      return <Medal className="text-gray-400" size={24} />;
+
+    if (index === 2)
+      return <Award className="text-amber-700" size={24} />;
+
+    return (
+      <span className="font-bold text-lg">
+        #{index + 1}
+      </span>
+    );
+  }
+
   return (
     <Layout>
-      <h1 className="text-5xl font-bold">
-        Leaderboard
-      </h1>
 
-      <p className="text-gray-500 mt-2 mb-10">
-        Compete with your friends and stay motivated.
-      </p>
+      <div className="mb-10">
 
-      <div className="bg-white rounded-3xl shadow overflow-hidden">
+        <p className="uppercase tracking-[0.25em] text-orange-500 font-semibold">
+          COMPETITION
+        </p>
 
-        {users.map((user) => (
+        <h1 className="text-5xl font-black mt-2">
+          Leaderboard
+        </h1>
+
+        <p className="text-slate-500 mt-3">
+          See who's protecting their streaks.
+        </p>
+
+      </div>
+
+      <div className="space-y-5">
+
+        {users.map((user, index) => (
 
           <div
-            key={user.rank}
-            className={`flex items-center justify-between px-8 py-6 border-b last:border-none
-            ${
-              user.you
-                ? "bg-orange-50"
-                : ""
-            }`}
+            key={user._id}
+            className={`rounded-[28px] p-6 backdrop-blur-xl border shadow-lg flex items-center justify-between transition hover:-translate-y-1 hover:shadow-xl ${index === 0
+                ? "bg-gradient-to-r from-yellow-100 to-orange-100 border-yellow-300"
+                : "bg-white/70 border-white/50"
+              }`}
           >
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-5">
 
-              <span className="text-3xl font-bold w-10">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-orange-500 to-amber-400 flex items-center justify-center text-white font-bold text-xl">
 
-                {user.rank === 1
-                  ? "🥇"
-                  : user.rank === 2
-                  ? "🥈"
-                  : user.rank === 3
-                  ? "🥉"
-                  : `#${user.rank}`}
+                {index === 0 ? (
+                  <Trophy size={24} />
+                ) : index === 1 ? (
+                  <Medal size={24} />
+                ) : index === 2 ? (
+                  <Award size={24} />
+                ) : (
+                  index + 1
+                )}
 
-              </span>
+              </div>
 
               <div>
 
-                <h2 className="text-xl font-semibold">
-
+                <h2 className="text-xl font-bold">
                   {user.name}
-
-                  {user.you && (
-                    <span className="ml-2 text-orange-500">
-                      (You)
-                    </span>
-                  )}
-
                 </h2>
 
-                <p className="text-gray-500">
+                <p className="text-slate-500">
                   🔥 {user.streak} day streak
                 </p>
 
@@ -95,12 +99,12 @@ function Leaderboard() {
 
             <div className="text-right">
 
-              <h2 className="font-bold text-xl">
-                {user.xp} XP
+              <h2 className="text-3xl font-black text-orange-500">
+                {user.xp}
               </h2>
 
-              <p className="text-gray-500">
-                {user.tasks} tasks completed
+              <p className="text-slate-500">
+                XP
               </p>
 
             </div>
@@ -110,6 +114,7 @@ function Leaderboard() {
         ))}
 
       </div>
+
     </Layout>
   );
 }

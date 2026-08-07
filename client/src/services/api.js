@@ -130,3 +130,146 @@ export async function togglePin(id) {
 
   return response.json();
 }
+const FRIEND_API = "http://127.0.0.1:3001/api/friends";
+
+export async function getPendingRequests() {
+  const response = await fetch(
+    `${FRIEND_API}/requests`,
+    {
+      headers: authHeaders(),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch requests");
+  }
+
+  return response.json();
+}
+
+export async function sendFriendRequest(receiver) {
+  const response = await fetch(
+    `${FRIEND_API}/request`,
+    {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify({ receiver }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to send request");
+  }
+
+  return response.json();
+}
+
+export async function acceptFriendRequest(id) {
+  const response = await fetch(
+    `${FRIEND_API}/accept/${id}`,
+    {
+      method: "POST",
+      headers: authHeaders(),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to accept request");
+  }
+
+  return response.json();
+}
+
+export async function rejectFriendRequest(id) {
+  const response = await fetch(
+    `${FRIEND_API}/reject/${id}`,
+    {
+      method: "POST",
+      headers: authHeaders(),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to reject request");
+  }
+
+  return response.json();
+}
+export async function getUsers() {
+  const response = await fetch(
+    `${FRIEND_API}/users`,
+    {
+      headers: authHeaders(),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch users");
+  }
+
+  return response.json();
+}
+
+export async function getFriends() {
+  const response = await fetch(
+    `${FRIEND_API}/myfriends`,
+    {
+      headers: authHeaders(),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch friends");
+  }
+
+  return response.json();
+}
+export async function getMyProfile() {
+  const response = await fetch(
+    "http://127.0.0.1:3001/auth/me",
+    {
+      headers: authHeaders(),
+    }
+  );
+
+  return response.json();
+}
+
+export async function getUserProfile(id) {
+  const response = await fetch(
+    `http://127.0.0.1:3001/api/friends/profile/${id}`,
+    {
+      headers: authHeaders(),
+    }
+  );
+
+  return response.json();
+}
+export async function getLeaderboard() {
+  const response = await fetch(
+    `${FRIEND_API}/leaderboard`,
+    {
+      headers: authHeaders(),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch leaderboard");
+  }
+
+  return response.json();
+}
+export async function getNotificationSummary() {
+  const response = await fetch(
+    `${API}/notifications`,
+    {
+      headers: authHeaders(),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch notifications");
+  }
+
+  return response.json();
+}

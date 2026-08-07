@@ -1,211 +1,234 @@
 import Layout from "../components/Layout";
+import Heatmap from "../components/analytics/Heatmap";
+
+import {
+  getMyProfile,
+  getUserProfile,
+  getTasks,
+} from "../services/api";
+
 import { useEffect, useState } from "react";
-import { getTasks } from "../services/api";
+import { useParams } from "react-router-dom";
 
 function Profile() {
-    const [user, setUser] = useState(null);
-    const [tasks, setTasks] = useState([]);
+  const { id } = useParams();
 
-    useEffect(() => {
-        const storedUser = JSON.parse(
-            localStorage.getItem("user")
-        );
+  const [user, setUser] = useState(null);
+  const [tasks, setTasks] = useState([]);
 
-        setUser(storedUser);
-        async function loadTasks() {
-            try {
-                const data = await getTasks();
-                setTasks(data);
-            } catch (err) {
-                console.error(err);
-            }
-        }
+  useEffect(() => {
+    loadProfile();
+    loadTasks();
+  }, [id]);
 
-        loadTasks();
-    }, []);
+  async function loadProfile() {
+    try {
+      const data = id
+        ? await getUserProfile(id)
+        : await getMyProfile();
 
-    const completedTasks = tasks.filter(
-        (task) => task.completed
-    ).length;
+      setUser(data);
 
-    const xp = completedTasks * 10;
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
-    const level = Math.max(
-        1,
-        Math.floor(xp / 100) + 1
+  async function loadTasks() {
+    try {
+      const data = await getTasks();
+      setTasks(data);
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  if (!user)
+    return (
+      <Layout>
+        Loading...
+      </Layout>
     );
 
-    function calculateCurrentStreak(tasks) {
-        const completedDates = tasks
-            .filter((task) => task.completedAt)
-            .map((task) => {
-                const d = new Date(task.completedAt);
-                d.setHours(0, 0, 0, 0);
-                return d.getTime();
-            });
+  const level = Math.max(
+    1,
+    Math.floor(user.xp / 100) + 1
+  );
 
-        const uniqueDates = [...new Set(completedDates)].sort((a, b) => b - a);
+  const completedTasks = tasks.filter(
+    (task) => task.completed
+  ).length;
 
-        if (uniqueDates.length === 0) return 0;
+  const achievements = [
+    {
+      title: "First Task",
+      unlocked: completedTasks >= 1,
+    },
+    {
+      title: "10 Tasks",
+      unlocked: completedTasks >= 10,
+    },
+    {
+      title: "25 Tasks",
+      unlocked: completedTasks >= 25,
+    },
+    {
+      title: "100 XP",
+      unlocked: user.xp >= 100,
+    },
+    {
+      title: "500 XP",
+      unlocked: user.xp >= 500,
+    },
+    {
+      title: "7 Day Streak",
+      unlocked: user.streak >= 7,
+    },
+  ];
+  return (
+    <Layout>
 
-        let streak = 0;
+      <div className="rounded-[34px] bg-white/70 backdrop-blur-xl border border-white/40 shadow-2xl p-10">
 
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        <div className="flex items-center gap-8">
 
-        let current = today.getTime();
+          <div className="h-28 w-28 rounded-full bg-gradient-to-br from-orange-500 to-amber-400 text-white flex items-center justify-center text-5xl font-black shadow-lg">
 
-        for (const date of uniqueDates) {
-            if (date === current) {
-                streak++;
-                current -= 86400000;
-            } else {
-                break;
-            }
-        }
+            {user.name.charAt(0).toUpperCase()}
 
-        return streak;
-    }
+          </div>
 
-    const streak = calculateCurrentStreak(tasks);
+          <div>
 
-    return (
-        <Layout>
-            <h1 className="text-4xl font-bold mb-8">
-                My Profile
+            <h1 className="text-5xl font-black">
+              {user.name}
             </h1>
 
-            <div className="bg-white rounded-2xl shadow p-8 max-w-3xl">
+            <p className="text-slate-500 mt-2">
+              {user.email}
+            </p>
 
-                <div className="flex items-center gap-6">
+            <div className="mt-5 inline-flex rounded-full bg-orange-100 px-4 py-2 text-orange-600 font-semibold">
+              🔥 {user.streak} Day Streak
+            </div>
 
-                    <div className="w-24 h-24 rounded-full bg-orange-500 flex items-center justify-center text-4xl text-white font-bold">
-                        {user?.name
-                            ?.split(" ")
-                            .map((word) => word[0])
-                            .join("")
-                            .toUpperCase()}
-                    </div>
+          </div>
 
-                    <div>
+        </div>
 
-                        <h2 className="text-3xl font-bold">
-                            {user?.name}
-                        </h2>
+      </div>
 
-                        <p className="text-gray-500">
-                            {user?.email}
-                        </p>
+      <div className="grid grid-cols-4 gap-6 mt-10">
 
-                    </div>
+        <div className="rounded-3xl bg-gradient-to-br from-orange-50 to-orange-100 p-7 shadow-lg hover:-translate-y-1 transition">
 
-                </div>
+          <p className="text-slate-500">
+            Level
+          </p>
 
-                <div className="grid grid-cols-2 gap-6 mt-10">
+          <h2 className="text-5xl font-black mt-3">
+            {level}
+          </h2>
 
-                    <div className="bg-slate-100 rounded-xl p-5">
-                        <p className="text-gray-500">
-                            Level
-                        </p>
+        </div>
 
-                        <h2 className="text-3xl font-bold">
-                            {level}
-                        </h2>
-                    </div>
+        <div className="rounded-3xl bg-gradient-to-br from-yellow-50 to-amber-100 p-7 shadow-lg hover:-translate-y-1 transition">
 
-                    <div className="bg-slate-100 rounded-xl p-5">
-                        <p className="text-gray-500">
-                            XP
-                        </p>
+          <p className="text-slate-500">
+            XP
+          </p>
 
-                        <h2 className="text-3xl font-bold">
-                            {xp}
-                        </h2>
-                    </div>
+          <h2 className="text-5xl font-black mt-3">
+            {user.xp}
+          </h2>
 
-                    <div className="bg-slate-100 rounded-xl p-5">
-                        <p className="text-gray-500">
-                            Current Streak
-                        </p>
+        </div>
 
-                        <h2 className="text-3xl font-bold">
-                            {streak} Days
-                        </h2>
-                    </div>
+        <div className="rounded-3xl bg-gradient-to-br from-red-50 to-orange-100 p-7 shadow-lg hover:-translate-y-1 transition">
 
-                    <div className="bg-slate-100 rounded-xl p-5">
-                        <p className="text-gray-500">
-                            Longest Streak
-                        </p>
+          <p className="text-slate-500">
+            Streak
+          </p>
 
-                        <h2 className="text-3xl font-bold">
-                            0 Days
-                        </h2>
-                    </div>
+          <h2 className="text-5xl font-black mt-3">
+            🔥 {user.streak}
+          </h2>
 
-                </div>
-                <div className="mt-10">
+        </div>
 
-                    <h2 className="text-2xl font-bold mb-5">
-                        Achievements
-                    </h2>
+        <div className="rounded-3xl bg-gradient-to-br from-blue-50 to-cyan-100 p-7 shadow-lg hover:-translate-y-1 transition">
 
-                    <div className="grid grid-cols-2 gap-4">
+          <p className="text-slate-500">
+            Friends
+          </p>
 
-                        <div
-                            className={`rounded-xl p-4 ${completedTasks >= 1
-                                ? "bg-green-100"
-                                : "bg-gray-100"
-                                }`}
-                        >
-                            🥇 First Task
-                        </div>
+          <h2 className="text-5xl font-black mt-3">
+            {user.friends?.length || 0}
+          </h2>
 
-                        <div
-                            className={`rounded-xl p-4 ${xp >= 100
-                                ? "bg-green-100"
-                                : "bg-gray-100"
-                                }`}
-                        >
-                            ⭐ 100 XP
-                        </div>
+        </div>
 
-                        <div
-                            className={`rounded-xl p-4 ${streak >= 7
-                                ? "bg-green-100"
-                                : "bg-gray-100"
-                                }`}
-                        >
-                            🔥 7 Day Streak
-                        </div>
+      </div>
 
-                        <div
-                            className={`rounded-xl p-4 ${completedTasks >= 25
-                                ? "bg-green-100"
-                                : "bg-gray-100"
-                                }`}
-                        >
-                            🏆 25 Tasks Completed
-                        </div>
+      <div className="rounded-[30px] bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl p-8 mt-10">
 
-                    </div>
+        <h2 className="text-3xl font-bold mb-6">
+          Activity Heatmap
+        </h2>
 
-                </div>
-                <button
-                    onClick={() => {
-                        localStorage.removeItem("token");
-                        localStorage.removeItem("user");
-                        window.location.href = "/auth";
-                    }}
-                    className="mt-10 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl font-semibold transition"
-                >
-                    Logout
-                </button>
+        <Heatmap tasks={tasks} />
+
+      </div>
+
+      <div className="rounded-[30px] bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl p-8 mt-10">
+
+        <h2 className="text-3xl font-bold mb-8">
+          Achievements
+        </h2>
+
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+          {achievements.map((achievement) => (
+
+            <div
+              key={achievement.title}
+              className={`rounded-3xl p-6 shadow transition hover:-translate-y-1 ${achievement.unlocked
+                  ? "bg-gradient-to-br from-green-50 to-emerald-100 border border-green-300"
+                  : "bg-slate-100 border border-slate-200"
+                }`}
+            >
+
+              <div className="text-5xl">
+
+                {achievement.unlocked ? "🏆" : "🔒"}
+
+              </div>
+
+              <h3 className="font-bold text-xl mt-5">
+
+                {achievement.title}
+
+              </h3>
+
+              <p className="mt-3 text-slate-500">
+
+                {achievement.unlocked
+                  ? "Achievement unlocked"
+                  : "Keep going"}
+
+              </p>
 
             </div>
 
-        </Layout>
-    );
+          ))}
+
+        </div>
+
+      </div>
+
+    </Layout>
+  );
 }
 
 export default Profile;

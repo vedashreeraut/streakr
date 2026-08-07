@@ -7,8 +7,12 @@ export function TaskProvider({ children }) {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    loadTasks();
-  }, []);
+  const token = localStorage.getItem("token");
+
+  if (!token) return;
+
+  loadTasks();
+}, []);
 
   async function loadTasks() {
     try {

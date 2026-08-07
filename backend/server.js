@@ -7,12 +7,15 @@ dotenv.config();
 const authRoutes = require("./routes/authRoutes");
 const app = express();
 
+const friendRoutes = require("./routes/friendRoutes");
 const auth = require("./middleware/authMiddleware");
 
 app.use(cors());
 app.use(express.json());
 app.use("/tasks", taskRoutes);
 app.use("/auth", authRoutes);
+app.use("/api/friends", friendRoutes);
+
 
 const PORT = 3001;
 const HOST = "127.0.0.1";

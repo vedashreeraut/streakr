@@ -1,101 +1,112 @@
+import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-
-const notifications = [
-  {
-    id: 1,
-    title: "🔥 Keep your streak alive!",
-    message: "You haven't completed a task today.",
-    time: "2 minutes ago",
-    unread: true,
-  },
-  {
-    id: 2,
-    title: "✅ Task Completed",
-    message: "Interview was marked as complete.",
-    time: "15 minutes ago",
-    unread: true,
-  },
-  {
-    id: 3,
-    title: "⭐ Level Up",
-    message: "Congratulations! You reached Level 2.",
-    time: "Yesterday",
-    unread: false,
-  },
-  {
-    id: 4,
-    title: "🏆 Leaderboard Update",
-    message: "Alex has passed you in XP.",
-    time: "Yesterday",
-    unread: false,
-  },
-];
+import {
+  getNotificationSummary,
+  getPendingRequests,
+  getMyProfile,
+} from "../services/api";
 
 function Notifications() {
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    loadNotifications();
+  }, []);
+
+  async function loadNotifications() {
+    try {
+      const summary = await getNotificationSummary();
+      const requests = await getPendingRequests();
+      const user = await getMyProfile();
+
+      const items = [];
+
+      if (summary.overdue > 0) {
+        items.push({
+          title: "⚠️ Overdue Tasks",
+          message: `${summary.overdue} overdue task(s).`,
+        });
+      }
+
+      if (summary.dueToday > 0) {
+        items.push({
+          title: "📅 Due Today",
+          message: `${summary.dueToday} task(s) due today.`,
+        });
+      }
+
+      if (requests.length > 0) {
+        items.push({
+          title: "👥 Friend Requests",
+          message: `${requests.length} pending request(s).`,
+        });
+      }
+
+      if (user.streak > 0) {
+        items.push({
+          title: "🔥 Current Streak",
+          message: `${user.streak} day streak.`,
+        });
+      }
+
+      if (user.xp >= 100) {
+        items.push({
+          title: "🏆 Achievement",
+          message: "100 XP milestone reached!",
+        });
+      }
+
+      setNotifications(items);
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
     <Layout>
-      <div className="flex justify-between items-center mb-10">
 
-        <div>
-          <h1 className="text-5xl font-bold">
-            Notifications
-          </h1>
+      <h1 className="text-5xl font-bold">
+        Notifications
+      </h1>
 
-          <p className="text-gray-500 mt-2">
-            Stay updated with your progress.
-          </p>
-        </div>
-
-        <button
-          className="text-orange-500 font-semibold hover:underline"
-        >
-          Mark all as read
-        </button>
-
-      </div>
+      <p className="text-gray-500 mt-2 mb-10">
+        Stay updated with your productivity.
+      </p>
 
       <div className="space-y-5">
 
-        {notifications.map((notification) => (
+        {notifications.length === 0 ? (
 
-          <div
-            key={notification.id}
-            className={`bg-white rounded-2xl shadow p-6 border-l-4 ${
-              notification.unread
-                ? "border-orange-500"
-                : "border-transparent"
-            }`}
-          >
+          <div className="bg-white rounded-2xl shadow p-8 text-center">
+            🎉 You're all caught up!
+          </div>
 
-            <div className="flex justify-between items-start">
+        ) : (
 
-              <div>
+          notifications.map((notification, index) => (
 
-                <h2 className="font-semibold text-xl">
-                  {notification.title}
-                </h2>
+            <div
+              key={index}
+              className="bg-white rounded-2xl shadow p-6 border-l-4 border-orange-500"
+            >
 
-                <p className="text-gray-600 mt-2">
-                  {notification.message}
-                </p>
+              <h2 className="font-bold text-xl">
+                {notification.title}
+              </h2>
 
-              </div>
-
-              {notification.unread && (
-                <span className="w-3 h-3 rounded-full bg-orange-500"></span>
-              )}
+              <p className="text-gray-600 mt-2">
+                {notification.message}
+              </p>
 
             </div>
 
-            <p className="text-gray-400 text-sm mt-4">
-              {notification.time}
-            </p>
+          ))
 
-          </div>
-
-        ))}
+        )}
 
       </div>
+
     </Layout>
   );
 }

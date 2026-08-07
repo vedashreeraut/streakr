@@ -148,28 +148,33 @@ function Tasks() {
     return (
         <Layout>
 
-            <div className="flex justify-between items-center mb-8">
+            <div className="flex items-center justify-between mb-10">
 
                 <div>
 
-                    <h1 className="text-5xl font-bold">
+                    <p className="uppercase tracking-[0.25em] text-orange-500 text-sm font-semibold">
+                        TASK MANAGER
+                    </p>
+
+                    <h1 className="text-5xl font-black mt-2">
                         My Tasks
                     </h1>
 
-                    <p className="text-gray-500 mt-2">
-                        Manage all your tasks here.
+                    <p className="text-slate-500 mt-3">
+                        {filteredTasks.length} Tasks • {completedTasksList.length} Completed
                     </p>
 
                 </div>
 
                 <button
                     onClick={() => setShowModal(true)}
-                    className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-semibold"
+                    className="rounded-2xl bg-gradient-to-r from-orange-500 to-amber-400 px-7 py-3 text-white font-semibold shadow-xl hover:scale-105 transition"
                 >
                     + New Task
                 </button>
+
             </div>
-            <div className="mt-8">
+            <div className="mt-8 rounded-3xl bg-white/60 backdrop-blur-xl border border-white/40 p-6 shadow-lg">
 
                 <TaskFilters
                     search={search}
@@ -180,12 +185,12 @@ function Tasks() {
                     setStatusFilter={setStatusFilter}
                 />
             </div>
-            <div className="space-y-10">
+            <div className="space-y-12 mt-10">
 
-                <section>
+                <section className="rounded-[32px] bg-white/55 backdrop-blur-xl border border-white/40 p-8 shadow-xl">
 
                     <h2 className="text-2xl font-bold mb-5">
-                        📌 Pinned
+                        📌 Pinned ({filteredTasks.filter(t => t.pinned && !t.completed).length})
                     </h2>
 
                     <div className="space-y-4">
@@ -204,6 +209,8 @@ function Tasks() {
                                     }
                                     onDelete={handleDelete}
                                     onToggle={handleToggle}
+                                    repeat={task.repeat}
+                                    isPrivate={task.isPrivate}
                                     onPin={handlePin}
                                     onEdit={() => {
                                         setEditingTask(task);
@@ -215,10 +222,10 @@ function Tasks() {
                     </div>
 
                 </section>
-                <section>
+                <section className="rounded-[32px] bg-white/55 backdrop-blur-xl border border-white/40 p-8 shadow-xl">
 
                     <h2 className="text-2xl font-bold mb-5">
-                        Today
+                        🎯 Today ({todayTasks.length})
                     </h2>
 
                     <div className="space-y-4">
@@ -259,10 +266,10 @@ function Tasks() {
                     </div>
 
                 </section>
-                <section>
+                <section className="rounded-[32px] bg-white/55 backdrop-blur-xl border border-white/40 p-8 shadow-xl">
 
                     <h2 className="text-2xl font-bold mb-5">
-                        Upcoming
+                        📅 Upcoming ({upcomingTasks.length})
                     </h2>
 
                     <div className="space-y-4">
@@ -299,10 +306,10 @@ function Tasks() {
                     </div>
 
                 </section>
-                <section>
+                <section className="rounded-[32px] bg-white/55 backdrop-blur-xl border border-white/40 p-8 shadow-xl">
 
                     <h2 className="text-2xl font-bold mb-5">
-                        Completed
+                        ✅ Completed ({completedTasksList.length})
                     </h2>
 
                     <div className="space-y-4">
@@ -373,6 +380,12 @@ function Tasks() {
 
                 }}
             />
+            <button
+                onClick={() => setShowModal(true)}
+                className="fixed bottom-8 right-8 z-50 h-16 w-16 rounded-full bg-gradient-to-r from-orange-500 to-amber-400 text-4xl text-white shadow-2xl transition hover:scale-110"
+            >
+                +
+            </button>
         </Layout>
     );
 }
