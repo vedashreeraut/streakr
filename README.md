@@ -178,19 +178,6 @@ Database:
 
 ---
 
-# 📸 Screenshots
-
-> Add screenshots of:
-- Login Page
-- Dashboard
-- Tasks
-- Analytics
-- Friends
-- Leaderboard
-- Notifications
-
----
-
 # 🔮 Future Enhancements
 
 - Email reminders
